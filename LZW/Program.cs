@@ -1,8 +1,6 @@
-﻿
+﻿// Used for Assert
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
+// Import LZW compression code
 using Compression;
 
 class Program{

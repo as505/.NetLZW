@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 namespace Compression;
 
 public class LZW
