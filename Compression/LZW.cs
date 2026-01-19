@@ -15,10 +15,15 @@ public class LZW
     }
 
     // First step of LZW is to initialize the dictionary with all possible codes of length 1
-    public int initDict(char[] characters)
+    public int initDict(char[] characters, int size)
     {
         // Dictionary index starts at 0
-        int idx = 0;
+        int idx;
+        for (idx = 0; idx < size; idx++)
+        {
+            // Convert char to string, as dictionary will contain multi-char strings
+            this.CodeDictionary.Append(characters[idx].ToString());
+        }
 
 
         // Success

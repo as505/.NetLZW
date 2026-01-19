@@ -50,13 +50,13 @@ class Program{
     private static LZW initLZW()
     {
         LZW compressor = new LZW();
-
+        int numCodes = 10;
         // Create array of 10 elems
-        char[] OneLenStrings = new char[10];
+        char[] OneLenStrings = new char[numCodes];
 
         // Add all digits 0 - 9 to array of chars
         int i;
-        for (i = 0; i < 10; i++)
+        for (i = 0; i < numCodes; i++)
         {
             // Get digit as char
             char digit = Convert.ToChar(i);
@@ -65,7 +65,8 @@ class Program{
         }
 
         // Initialize LZW dict with all 1 length strings (digits 0-9 in this case)
-        compressor.initDict(OneLenStrings);
+        int retCode = compressor.initDict(OneLenStrings, numCodes);
+        Debug.Assert(retCode == 1);
 
         return compressor;
     }
@@ -81,7 +82,8 @@ class Program{
         // Assert correct string lenght, number of pixels * 3 color channels * 3 chars per channel
         Debug.Assert(RGB.Length == amount*3*3);
 
-        // Get a LZW compressor initialized to compress strings of digits
+        Console.WriteLine("Initializing dictionary...");
+        // Get a LZW compressor object initialized to compress strings of digits
         LZW compressor = initLZW();
         
 
