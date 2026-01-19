@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 namespace Compression;
 
 public class LZW
@@ -19,14 +21,32 @@ public class LZW
     {
         // Dictionary index starts at 0
         int idx;
+        
         for (idx = 0; idx < size; idx++)
         {
             // Convert char to string, as dictionary will contain multi-char strings
-            this.CodeDictionary.Append(characters[idx].ToString());
+            this.CodeDictionary.Add(characters[idx].ToString());
         }
 
-
+        Debug.Assert(this.CodeDictionary.Count != 0);
         // Success
         return 1;
+    }
+
+    // Search for given code in dict
+    public int searchDict(string code)
+    {
+        int codeIDX = this.CodeDictionary.FindIndex(x=> x == code);
+        return codeIDX;
+    }
+
+    public void printDict()
+    {
+        foreach(string code in this.CodeDictionary)
+        {
+            Console.WriteLine(code);
+        }
+
+        return;
     }
 }

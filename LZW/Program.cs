@@ -52,16 +52,18 @@ class Program{
         LZW compressor = new LZW();
         int numCodes = 10;
         // Create array of 10 elems
-        char[] OneLenStrings = new char[numCodes];
+        char[] OneLenStrings = new char[10];
 
         // Add all digits 0 - 9 to array of chars
         int i;
-        for (i = 0; i < numCodes; i++)
+        // 48 is the char value for '0'
+        for (i = 48; i < 48 + numCodes; i++)
         {
             // Get digit as char
             char digit = Convert.ToChar(i);
             // Add to array
-            OneLenStrings[i] = digit;
+            // minus 48 to convert back to array index
+            OneLenStrings[i-48] = digit;
         }
 
         // Initialize LZW dict with all 1 length strings (digits 0-9 in this case)
@@ -86,8 +88,13 @@ class Program{
         // Get a LZW compressor object initialized to compress strings of digits
         LZW compressor = initLZW();
         
+        Console.WriteLine("Printing dictionary...");
+        compressor.printDict();
 
+        int res = compressor.searchDict("0");
         
+        
+
         Console.WriteLine("Finished!");
     }
 }
