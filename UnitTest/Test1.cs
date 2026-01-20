@@ -26,4 +26,26 @@ public sealed class TestDict
 
         return;
     }
+    
+    [TestMethod]
+    public void TestCompress()
+    {
+        // Create LZW compressor initialized with digits 0-9
+        LZW compressor = new LZW();
+        int res = compressor.initDict(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 10);
+        // Assert init returns success
+        Assert.AreEqual(1, res);
+
+        // Test input that cant be compressed
+        string incompressible = "0123456789";
+        string compString = compressor.compressInput(incompressible);
+        // Assert input and output are equal
+        Assert.AreEqual(incompressible, compString);
+
+        string seccondInput = "000111222333444555";
+        string seccondCompString = compressor.compressInput(seccondInput);
+        // Assert input and output are equal
+        Console.WriteLine(seccondCompString);
+        Assert.AreNotEqual(seccondInput, seccondCompString);
+    }
 }

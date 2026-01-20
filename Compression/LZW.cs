@@ -40,6 +40,36 @@ public class LZW
         return codeIDX;
     }
 
+    // Compress given input with LZW algorithm, compressor must be initialized with 'initDict()' before use
+    public string compressInput(string input)
+    {
+        // Will get populated by indexes into the compressor dictionary
+        string output = "";
+
+        // Iter for input string
+        int strIter = 0;
+        // Current input length, starts at 1 and grows
+        int strSelectLen = 1;
+        // Substring of input, used to fetch index codes from dictionary
+        string currentCode = "";
+
+        while(strIter + strSelectLen < input.Length+1)
+        {
+            currentCode = input.Substring(strIter, strSelectLen);
+            int found = this.searchDict(currentCode);
+            // If we find the subsring in the code dict, replace substring with code index
+            if (found != -1)
+            {
+                output += found.ToString();
+            }
+            strIter++;
+        }
+
+        // Return compressed string
+        return output;
+    }
+
+    // Prints each dictionary entry in terminal
     public void printDict()
     {
         foreach(string code in this.CodeDictionary)
@@ -48,5 +78,11 @@ public class LZW
         }
 
         return;
+    }
+
+    // Returns Code Dictionary as a list
+    public List<String> returnDict()
+    {
+        return this.CodeDictionary;
     }
 }
