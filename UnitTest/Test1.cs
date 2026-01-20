@@ -44,8 +44,7 @@ public sealed class TestDict
 
         string seccondInput = "000111222333444555";
         string seccondCompString = compressor.compressInput(seccondInput);
-        // Assert input and output are equal
-        Console.WriteLine(seccondCompString);
-        Assert.AreNotEqual(seccondInput, seccondCompString);
+        // Assert output has been compressed
+        Assert.IsLessThan(seccondInput.Length, seccondCompString.Length);
     }
 }

@@ -44,7 +44,7 @@ public class LZW
     public string compressInput(string input)
     {
         // Will get populated by indexes into the compressor dictionary
-        string output = "";
+        string outputString = "";
 
         // Iter for input string
         int strIter = 0;
@@ -56,18 +56,39 @@ public class LZW
         while(strIter + strSelectLen < input.Length+1)
         {
             currentCode = input.Substring(strIter, strSelectLen);
-            int found = this.searchDict(currentCode);
-            // If we find the subsring in the code dict, replace substring with code index
-            if (found != -1)
+            int foundIDX = this.searchDict(currentCode);
+            int prevIDX = foundIDX;
+            // Loop until a code is not in dict
+            while (foundIDX != -1)
             {
-                output += found.ToString();
+                if (strIter + strSelectLen > input.Length-1)
+                {
+                    break;
+                }
+                // Check longer code
+                strSelectLen += 1;
+                currentCode = input.Substring(strIter, strSelectLen);
+                // Store last index
+                prevIDX = foundIDX;
+                // Find index for longer code string
+                foundIDX = this.searchDict(currentCode);
             }
+            // Add new code to dict
+            this.CodeDictionary.Add(currentCode);
+
+            // Reset
+            strSelectLen = 1;
+            // Append previous index to output string
+            outputString += prevIDX;
+
             strIter++;
         }
 
         // Return compressed string
-        return output;
+        return outputString;
     }
+
+    
 
     // Prints each dictionary entry in terminal
     public void printDict()
