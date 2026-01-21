@@ -52,37 +52,37 @@ public class LZW
         int strSelectLen = 1;
         // Substring of input, used to fetch index codes from dictionary
         string currentCode = "";
+        int prevDictIDX = 0;
+        int dictResult = 0;
 
-        while(strIter + strSelectLen < input.Length+1)
+        while(strIter + strSelectLen <= input.Length)
         {
+            // Get substring of input
             currentCode = input.Substring(strIter, strSelectLen);
-            int foundIDX = this.searchDict(currentCode);
-            int prevIDX = foundIDX;
-            // Loop until a code is not in dict
-            while (foundIDX != -1)
+            // Check if substring is stored in code dict
+            dictResult = this.searchDict(currentCode);
+            // Store dict index, or return last found index if the code is missing
+            if (dictResult != -1)
             {
-                if (strIter + strSelectLen > input.Length-1)
-                {
-                    break;
-                }
-                // Check longer code
+                // Code is found, store index for later
+                prevDictIDX = dictResult;
+                // Increase length of code string
                 strSelectLen += 1;
-                currentCode = input.Substring(strIter, strSelectLen);
-                // Store last index
-                prevIDX = foundIDX;
-                // Find index for longer code string
-                foundIDX = this.searchDict(currentCode);
+
+            } else
+            {
+                // Code is not found in dict, send last found idx to output, and add code to dict
+                outputString += prevDictIDX;
+                this.CodeDictionary.Add(currentCode);
+                // Move iterator forward
+                strIter += (strSelectLen-1);
+                // Reset code length
+                strSelectLen = 1;
             }
-            // Add new code to dict
-            this.CodeDictionary.Add(currentCode);
-
-            // Reset
-            strSelectLen = 1;
-            // Append previous index to output string
-            outputString += prevIDX;
-
-            strIter++;
         }
+
+        // Remember to add last Code index before returning result
+        outputString += prevDictIDX;
 
         // Return compressed string
         return outputString;
@@ -95,7 +95,8 @@ public class LZW
     {
         foreach(string code in this.CodeDictionary)
         {
-            Console.WriteLine(code);
+            int idx = this.searchDict(code);
+            Console.WriteLine($"Code: {code}, Index: {idx}");
         }
 
         return;

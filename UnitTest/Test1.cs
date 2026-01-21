@@ -37,14 +37,27 @@ public sealed class TestDict
         Assert.AreEqual(1, res);
 
         // Test input that cant be compressed
-        string incompressible = "0123456789";
-        string compString = compressor.compressInput(incompressible);
+        string inputString = "0123456789";
+        string compString = compressor.compressInput(inputString);
         // Assert input and output are equal
-        Assert.AreEqual(incompressible, compString);
+        Assert.AreEqual(inputString, compString);
 
-        string seccondInput = "000111222333444555";
-        string seccondCompString = compressor.compressInput(seccondInput);
-        // Assert output has been compressed
-        Assert.IsLessThan(seccondInput.Length, seccondCompString.Length);
+        // Compressing first string again should yield better results, since codes are now in code dict
+        string seccondCompString = compressor.compressInput(inputString);
+        // Input should result in a different compressed string
+        Assert.AreNotEqual(compString, seccondCompString);
+
+        // The small input means it takes a few iterations before the string gets shorter, as multiple digits gets swapped with multi-digit indexes
+        int i;
+        // Initiate string as input string, this will get overwritten by progresively shorter compressed strings in the following loop
+        string thirdCompString = compString;
+        for (i = 0; i < 5; i++)
+        {
+            thirdCompString = compressor.compressInput(inputString);
+        }
+        
+        Assert.IsLessThan(compString.Length, thirdCompString.Length);
+
+
     }
 }
