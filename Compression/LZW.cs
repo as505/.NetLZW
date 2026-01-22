@@ -40,9 +40,18 @@ public class LZW
         return codeIDX;
     }
 
+    // Asserts that the code dictionary is initiated
+    private void assertCodedictStatus()
+    {
+        Trace.Assert(this.CodeDictionary.Count() > 0);
+        return;
+    }
+
     // Compress given input with LZW algorithm, compressor must be initialized with 'initDict()' before use
     public string compressInput(string input)
     {
+        // Ensure dict is initiated
+        this.assertCodedictStatus();
         // Will get populated by indexes into the compressor dictionary
         string outputString = "";
 
@@ -88,6 +97,16 @@ public class LZW
         return outputString;
     }
 
+    // Using only the initial LZW dictionary of all one-length codes, decompress the given string
+    // Requires a new LZD object with an initialized code dictionary, otherwise behaviour is undefined
+    public string decompressInput(string input)
+    {
+        // Ensure dict is initiated
+        this.assertCodedictStatus();
+
+        string outputString = "";
+        return outputString;
+    }
     
 
     // Prints each dictionary entry in terminal

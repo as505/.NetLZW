@@ -6,21 +6,28 @@ namespace UnitTest;
 [TestClass]
 public sealed class TestDict
 {
+    private LZW initDigitsLZW()
+    {
+        // Create LZW compressor initialized with digits 0-9
+        LZW compressor = new LZW();
+        int res = compressor.initDict(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 10);
+        // Success
+        Assert.AreEqual(1, res);
+
+        return compressor;
+    }
     [TestMethod]
     // Tests that a LZW object can be created and initialized for digits 0-9
     public void TestDictInit()
     {
         // Create LZW compressor initialized with digits 0-9
-        LZW compressor = new LZW();
-        int res = compressor.initDict(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 10);
-        // Assert init returns success
-        Assert.AreEqual(1, res);
+        LZW compressor = this.initDigitsLZW();
 
         // Search compressor dict for each digit 0-9, asserting that each digit is found
         int i;
         for (i = 0; i< 10; i++)
         {
-            res = compressor.searchDict(i.ToString());
+            int res = compressor.searchDict(i.ToString());
             Assert.AreNotEqual(-1, res);
         }   
 
@@ -31,10 +38,8 @@ public sealed class TestDict
     public void TestCompress()
     {
         // Create LZW compressor initialized with digits 0-9
-        LZW compressor = new LZW();
-        int res = compressor.initDict(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], 10);
-        // Assert init returns success
-        Assert.AreEqual(1, res);
+        LZW compressor = this.initDigitsLZW();
+        
 
         // Test input that cant be compressed
         string inputString = "0123456789";
@@ -58,6 +63,24 @@ public sealed class TestDict
         
         Assert.IsLessThan(compString.Length, thirdCompString.Length);
 
+        return;
+    }
 
+    [TestMethod]
+    public void TestDifferentStartingDict()
+    {
+        // Create compressor initialized to A B C D
+        LZW compressor = new LZW();
+        compressor.initDict(['A', 'B', 'C', 'D'], 4);
+        // Check dict contains only the four entries
+        Assert.AreEqual(4, compressor.returnDict().Count());
+        
+        // Create input string using the four chars
+        string input = "ABABABCDCDCDCDAABBAABB";
+        string compressedString = compressor.compressInput(input);
+
+        // Check that compression works
+        Assert.AreNotEqual(input, compressedString);
+        Assert.IsLessThan(input, compressedString);
     }
 }
