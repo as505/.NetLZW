@@ -105,6 +105,9 @@ public class LZW
         this.assertCodedictStatus();
 
         string outputString = "";
+
+        
+
         return outputString;
     }
     

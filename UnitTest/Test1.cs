@@ -4,7 +4,7 @@ using Compression;
 namespace UnitTest;
 
 [TestClass]
-public sealed class TestDict
+public sealed class TestLZW
 {
     private LZW initDigitsLZW()
     {
@@ -16,8 +16,9 @@ public sealed class TestDict
 
         return compressor;
     }
-    [TestMethod]
+
     // Tests that a LZW object can be created and initialized for digits 0-9
+    [TestMethod]
     public void TestDictInit()
     {
         // Create LZW compressor initialized with digits 0-9
@@ -82,5 +83,27 @@ public sealed class TestDict
         // Check that compression works
         Assert.AreNotEqual(input, compressedString);
         Assert.IsLessThan(input, compressedString);
+    }
+
+    [TestMethod]
+    public void TestDecode()
+    {
+        // Init two LZW objects with the same starting code dictionary
+        LZW compressor = this.initDigitsLZW();
+        LZW decoder = this.initDigitsLZW();
+
+
+        // Create a long input message
+        string input = "1234";
+        int i;
+        for (i = 0; i < 10; i++)
+        {
+            input += input;
+        }
+
+        string compressed = compressor.compressInput(input);
+        string decompressed = decoder.decompressInput(compressed);
+
+        Assert.AreEqual(input, decompressed);
     }
 }
