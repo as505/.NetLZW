@@ -40,6 +40,20 @@ public class LZW
         return codeIDX;
     }
 
+    // Returns the code stored at the index in the code dict
+    // If index is out of range, return empty string instead
+    public string getCodeFromDict(int index)
+    {
+        if (index > this.CodeDictionary.Count -1)
+        {
+            return "";
+        }
+
+        string code = this.CodeDictionary[index];
+        return code;
+
+    }
+
     // Asserts that the code dictionary is initiated
     private void assertCodedictStatus()
     {
@@ -106,6 +120,19 @@ public class LZW
 
         string outputString = "";
 
+        int strIter = 0;
+        int currentCodeLen = 1;
+        string currentCodeIDX = "";
+
+        while(strIter + currentCodeLen <= input.Length)
+        {
+            // Fetch next symbol
+            currentCodeIDX = input.Substring(strIter, currentCodeLen);
+            // Check code dict
+            string dictCode = this.getCodeFromDict(Int32.Parse(currentCodeIDX));
+            Console.WriteLine(dictCode);
+            strIter += 1;
+        }
         
 
         return outputString;
