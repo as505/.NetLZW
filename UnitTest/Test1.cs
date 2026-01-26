@@ -89,17 +89,15 @@ public sealed class TestLZW
     public void TestDecode()
     {
         // Init two LZW objects with the same starting code dictionary
-        LZW compressor = this.initDigitsLZW();
-        LZW decoder = this.initDigitsLZW();
+        LZW compressor = new LZW();
+        LZW decoder = new LZW();
+        compressor.initDict(['A', 'B'], 2);
+        decoder.initDict(['A', 'B'], 2);
 
 
         // Create a long input message
-        string input = "1234";
-        int i;
-        for (i = 0; i < 10; i++)
-        {
-            input += input;
-        }
+        string input = "ABABABBAA";
+        
 
         string compressed = compressor.compressInput(input);
         string decompressed = decoder.decompressInput(compressed);

@@ -122,13 +122,13 @@ public class LZW
         string prevEmitString = "";
 
         int strIter = 0;
-        int currentCodeLen = 1;
+        
         string currentCodeIDX = "";
 
-        while(strIter + currentCodeLen <= input.Length)
+        while(strIter < input.Length)
         {
             // Fetch next symbol
-            currentCodeIDX = input.Substring(strIter, currentCodeLen);
+            currentCodeIDX = input.Substring(strIter, 1);
             // Check code dict
             string dictString = this.getCodeFromDict(Int32.Parse(currentCodeIDX));
             // Blank string means index is not in dict
@@ -137,8 +137,11 @@ public class LZW
                 // Emit to output
                 outputString += dictString;
                 // Concatenate previously emitted string with first symbol of current string, and add to code dict
-                string newDictEntry = prevEmitString + dictString.Substring(0, 1);
-                this.CodeDictionary.Add(newDictEntry);
+                if (prevEmitString != "")
+                {
+                    string newDictEntry = prevEmitString + dictString.Substring(0, 1);
+                    this.CodeDictionary.Add(newDictEntry);
+                }
 
                 // Replace previously emitted string with current string 
                 prevEmitString = dictString;
@@ -152,8 +155,6 @@ public class LZW
                 prevEmitString = V;
             }
 
-
-            Console.WriteLine(prevEmitString);
             strIter += 1;
         }
         
