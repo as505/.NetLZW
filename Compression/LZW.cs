@@ -119,6 +119,7 @@ public class LZW
         this.assertCodedictStatus();
 
         string outputString = "";
+        string prevEmitString = "";
 
         int strIter = 0;
         int currentCodeLen = 1;
@@ -129,8 +130,30 @@ public class LZW
             // Fetch next symbol
             currentCodeIDX = input.Substring(strIter, currentCodeLen);
             // Check code dict
-            string dictCode = this.getCodeFromDict(Int32.Parse(currentCodeIDX));
-            Console.WriteLine(dictCode);
+            string dictString = this.getCodeFromDict(Int32.Parse(currentCodeIDX));
+            // Blank string means index is not in dict
+            if (dictString != "")
+            {
+                // Emit to output
+                outputString += dictString;
+                // Concatenate previously emitted string with first symbol of current string, and add to code dict
+                string newDictEntry = prevEmitString + dictString.Substring(0, 1);
+                this.CodeDictionary.Add(newDictEntry);
+
+                // Replace previously emitted string with current string 
+                prevEmitString = dictString;
+            } else
+            {
+                // Concat previously emitted string with first symbol of current code
+                string V = prevEmitString + currentCodeIDX.Substring(0, 1);
+                // Add V to code dictionary and emit to output
+                this.CodeDictionary.Add(V);
+                outputString += V;
+                prevEmitString = V;
+            }
+
+
+            Console.WriteLine(prevEmitString);
             strIter += 1;
         }
         
