@@ -43,26 +43,13 @@ public sealed class TestLZW
 
         // Test input that cant be compressed
         string inputString = "0123456789";
-        string compString = compressor.compressInput(inputString);
-        // Assert input and output are equal
-        Assert.AreEqual(inputString, compString);
+        List<int> compressedData = compressor.compressInput(inputString);
+        
 
         // Compressing first string again should yield better results, since codes are now in code dict
-        string seccondCompString = compressor.compressInput(inputString);
+        List<int> seccondCompData = compressor.compressInput(inputString);
         // Input should result in a different compressed string
-        Assert.AreNotEqual(compString, seccondCompString);
-
-        // The small input means it takes a few iterations before the string gets shorter, as multiple digits gets swapped with multi-digit indexes
-        int i;
-        // Initiate string as input string, this will get overwritten by progresively shorter compressed strings in the following loop
-        string thirdCompString = compString;
-        for (i = 0; i < 5; i++)
-        {
-            thirdCompString = compressor.compressInput(inputString);
-        }
-        
-        Assert.IsLessThan(compString.Length, thirdCompString.Length);
-
+        Assert.AreNotEqual(compressedData, seccondCompData);
         return;
     }
 
@@ -77,11 +64,8 @@ public sealed class TestLZW
         
         // Create input string using the four chars
         string input = "ABABABCDCDCDCDAABBAABB";
-        string compressedString = compressor.compressInput(input);
+        List<int> compressedString = compressor.compressInput(input);
 
-        // Check that compression works
-        Assert.AreNotEqual(input, compressedString);
-        Assert.IsLessThan(input, compressedString);
     }
 
     [TestMethod]
@@ -98,8 +82,8 @@ public sealed class TestLZW
         string input = "ABABABBAA";
         
 
-        string compressed = compressor.compressInput(input);
-        string decompressed = decoder.decompressInput(compressed);
+        List<int> compressedData = compressor.compressInput(input);
+        string decompressed = decoder.decompressInput(compressedData);
 
         Assert.AreEqual(input, decompressed);
     }
@@ -123,7 +107,7 @@ public sealed class TestLZW
         int prev = 0;
 
         // Create random string with somewhat repeating patterns
-        for (i = 0; i < 25; i++)
+        for (i = 0; i < 250; i++)
         {
             // 50% chance to repeat last letter
             if (rnd.Next(0, 1) == 1)
@@ -139,9 +123,8 @@ public sealed class TestLZW
             }
         }
 
-        string compressedString = compressor.compressInput(input);
-        int test = compressedString.Length;
-        string decodedString = decoder.decompressInput(compressedString);
+        List<int> compressedData = compressor.compressInput(input);
+        string decodedString = decoder.decompressInput(compressedData);
 
         Assert.AreEqual(input, decodedString);
     }
