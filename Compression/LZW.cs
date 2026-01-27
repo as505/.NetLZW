@@ -144,8 +144,8 @@ public class LZW
                 prevEmitString = dictString;
             } else
             {
-                // Concat previously emitted string with first symbol of current code
-                string V = prevEmitString + currentCodeIDX.Substring(0, 1);
+                // Concat previously emitted string with first symbol itself
+                string V = prevEmitString + prevEmitString.Substring(0, 1);
                 // Add V to code dictionary and emit to output
                 this.CodeDictionary.Add(V);
                 outputString += V;
