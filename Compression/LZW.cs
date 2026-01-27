@@ -62,12 +62,13 @@ public class LZW
     }
 
     // Compress given input with LZW algorithm, compressor must be initialized with 'initDict()' before use
-    public string compressInput(string input)
+    public List<int> compressInput(string input)
     {
         // Ensure dict is initiated
         this.assertCodedictStatus();
-        // Will get populated by indexes into the compressor dictionary
-        string outputString = "";
+
+        // Each entry in list is one index to code dictionary
+        List<int> outputList = [];
 
         // Iter for input string
         int strIter = 0;
@@ -95,7 +96,7 @@ public class LZW
             } else
             {
                 // Code is not found in dict, send last found idx to output, and add code to dict
-                outputString += prevDictIDX;
+                outputList.Add(prevDictIDX);
                 this.CodeDictionary.Add(currentCode);
                 // Move iterator forward
                 strIter += (strSelectLen-1);
@@ -105,15 +106,15 @@ public class LZW
         }
 
         // Remember to add last Code index before returning result
-        outputString += prevDictIDX;
+        outputList.Add(prevDictIDX);
 
         // Return compressed string
-        return outputString;
+        return outputList;
     }
 
     // Using only the initial LZW dictionary of all one-length codes, decompress the given string
     // Requires a new LZD object with an initialized code dictionary, otherwise behaviour is undefined
-    public string decompressInput(string input)
+    public string decompressInput(List<int> input)
     {
         // Ensure dict is initiated
         this.assertCodedictStatus();
@@ -122,15 +123,11 @@ public class LZW
         string prevEmitString = "";
 
         int strIter = 0;
-        
-        string currentCodeIDX = "";
 
-        while(strIter < input.Length)
+        foreach(int IDX in input)
         {
-            // Fetch next symbol
-            currentCodeIDX = input.Substring(strIter, 1);
             // Check code dict
-            string dictString = this.getCodeFromDict(Int32.Parse(currentCodeIDX));
+            string dictString = this.getCodeFromDict(IDX);
             // Blank string means index is not in dict
             if (dictString != "")
             {
