@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Compression;
+﻿using Compression;
 
 namespace UnitTest;
 
@@ -95,7 +94,7 @@ public sealed class TestLZW
         decoder.initDict(['A', 'B'], 2);
 
 
-        // Create a long input message
+        // Create an input message
         string input = "ABABABBAA";
         
 
@@ -103,5 +102,47 @@ public sealed class TestLZW
         string decompressed = decoder.decompressInput(compressed);
 
         Assert.AreEqual(input, decompressed);
+    }
+
+    [TestMethod]
+    public void TestLongEncodeDecode()
+    {
+        char[] letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',];
+        // Create LZW objects initialized to all digits 0-9
+        LZW compressor = new LZW();
+        LZW decoder = new LZW();
+        compressor.initDict(letters, 8);
+        decoder.initDict(letters, 8);
+
+        // Generate long input
+        int seed = 10;
+        Random rnd = new Random(seed);
+
+        string input = "";
+        int i;
+        int prev = 0;
+
+        // Create random string with somewhat repeating patterns
+        for (i = 0; i < 25; i++)
+        {
+            // 50% chance to repeat last letter
+            if (rnd.Next(0, 1) == 1)
+            {
+                input += letters[prev];
+                
+            } else
+            { 
+                // 50% chance to chose a new letter
+                int randNum = rnd.Next(0, 7);
+                prev = randNum;
+                input += letters[randNum];
+            }
+        }
+
+        string compressedString = compressor.compressInput(input);
+        int test = compressedString.Length;
+        string decodedString = decoder.decompressInput(compressedString);
+
+        Assert.AreEqual(input, decodedString);
     }
 }
