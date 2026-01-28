@@ -88,12 +88,18 @@ class Program{
         // Get a LZW compressor object initialized to compress strings of digits
         LZW compressor = initLZW();
         
-        Console.WriteLine("Printing dictionary...");
+        Console.WriteLine("Printing starting dictionary...");
         compressor.printDict();
 
-        int res = compressor.searchDict("0");
+        Console.WriteLine("Compressing data...");
+        List<int> CompressedData = compressor.compressInput(RGB);
         
-        
+        int orgSize = RGB.Length*sizeof(int);
+        int compSize = CompressedData.Count()*sizeof(int);
+        double compressionRatio = (double)compSize / (double)orgSize * 100;
+
+
+        Console.WriteLine($"Original size:\t {orgSize} bits\nCompressed size: {compSize} bits\n\nCompressed input by {compressionRatio.ToString("G4")}%");
 
         Console.WriteLine("Finished!");
     }
